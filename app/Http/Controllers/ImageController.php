@@ -19,7 +19,7 @@ class ImageController extends Controller
         }
 
         $request->validate([
-               "image" => ["required","file","image"]
+               "image" => ["required","file","image","mimes:png,jpg,jpeg,svg,webp"]
            ]);
 
         $formImage = $request->file("image");

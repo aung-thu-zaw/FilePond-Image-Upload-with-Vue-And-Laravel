@@ -2,21 +2,33 @@
 import vueFilePond, { setOptions } from "vue-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import axios from "axios";
+
+let serverMessage = {};
 
 setOptions({
   server: {
     process: {
       url: "./images/upload",
+      onerror: (response) => {
+        serverMessage = JSON.parse(response);
+      },
       headers: {
         "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf_token"]')
           .content,
       },
     },
   },
+  labelFileProcessingError: () => {
+    return serverMessage.error;
+  },
 });
 
-const FilePond = vueFilePond(FilePondPluginFileValidateType);
+const FilePond = vueFilePond(
+  FilePondPluginFileValidateType,
+  FilePondPluginFileValidateSize
+);
 
 export default {
   name: "app",
@@ -40,7 +52,7 @@ export default {
         return;
       }
 
-      this.images.push(file.serverId);
+      this.images.unshift(file.serverId);
     },
   },
 
@@ -65,7 +77,8 @@ export default {
       ref="pond"
       label-idle="Click to choose image, or Drop files here..."
       :allow-multiple="true"
-      accepted-file-types="image/*"
+      accepted-file-types="image/jpg, image/png, image/webp, image/jpeg, image/svg"
+      max-file-size="1MB"
       @init="filePondInitialized"
       @processfile="handleProcessFile"
     />
