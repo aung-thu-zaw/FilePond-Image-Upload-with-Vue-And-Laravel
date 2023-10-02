@@ -28,16 +28,27 @@ export default {
       images: [],
     };
   },
+
   methods: {
     filePondInitialized() {
       console.log("FilePond has initialized", this.$refs.pond);
     },
+
+    handleProcessFile(error, file) {
+      if (error) {
+        console.log(error);
+        return;
+      }
+
+      this.images.push(file.serverId);
+    },
   },
+
   mounted() {
     axios
       .get("/images")
       .then((response) => {
-        $this.images = response.data;
+        this.images = response.data;
       })
       .catch((error) => {
         console.log(error);
@@ -54,22 +65,23 @@ export default {
       ref="pond"
       label-idle="Click to choose image, or Drop files here..."
       :allow-multiple="true"
-      accepted-file-types="image/jpeg, image/png"
+      accepted-file-types="image/*"
       @init="filePondInitialized"
+      @processfile="handleProcessFile"
     />
   </div>
 
   <!-- Gallery  -->
-  <div v-for="image in images" :key="image.id" class="gallery">
-    <a target="_blank" :href="'/storage/images/' + image.name">
+  <div v-for="(image, index) in images" :key="index" class="gallery">
+    <a target="_blank" :href="'/storage/images/' + image">
       <img
-        :src="'/storage/images/' + image.name"
-        :alt="image.name"
+        :src="'/storage/images/' + image"
+        :alt="image"
         width="600"
         height="400"
       />
     </a>
-    <div class="desc">{{ image.name }}</div>
+    <div class="desc">{{ image }}</div>
   </div>
 </template>
 

@@ -9,5 +9,5 @@ Route::get('/', function () {
 
 
 
-// Route::get("/images", [ImageController::class,"show"]);
+Route::get("/images", [ImageController::class,"show"]);
 Route::post("/images/upload", [ImageController::class,"store"]);

@@ -3,17 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Image;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ImageController extends Controller
 {
-    // public function show(): JsonResponse
-    // {
-    //     return response()->json(["images" => Image::pluck("name")->toArray()]);
-    // }
+    public function show()
+    {
+        return Image::pluck("name")->toArray();
+    }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request)
     {
         if(!$request->hasFile("image")) {
             return response()->json(["error" => "There is no image present."], 400);
@@ -31,9 +30,9 @@ class ImageController extends Controller
 
         $formImage->storeAs("/images", $finalName);
 
-        $image = Image::create(["name" => $finalName]);
+        Image::create(["name" => $finalName]);
 
-        return response()->json(["image" => $image]);
+        return $finalName;
 
     }
 }
