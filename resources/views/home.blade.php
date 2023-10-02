@@ -21,6 +21,7 @@
             text-align: center;
             font-family: sans-serif;
             font-size: 1.5rem;
+            margin-bottom: 50px;
         }
     </style>
 </head>
